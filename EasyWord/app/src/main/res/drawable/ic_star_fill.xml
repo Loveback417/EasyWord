@@ -1,0 +1,24 @@
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <path
+        android:fillColor="@color/yello"
+        android:strokeWidth="4"
+        android:pathData="
+    M 100,20
+    L 123,85
+    L 185,85
+    L 138,128
+    L 155,190
+    L 100,155
+    L 45,190
+    L 62,128
+    L 16,85
+    L 78,85
+    Z"/> <!-- 闭合路径 -->
+
+</vector>

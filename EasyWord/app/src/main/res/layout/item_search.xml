@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:orientation="horizontal"
+    android:padding="3dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:text="knuknu"
+        android:textSize="30sp"
+        android:id="@+id/tv_search_word"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="match_parent"/>
+
+    <TextView
+        android:gravity="center|left"
+        android:text="你好"
+        android:textSize="20sp"
+        android:id="@+id/tv_search_word_meaning"
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:layout_height="match_parent" />
+</LinearLayout>

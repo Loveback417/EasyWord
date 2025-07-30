@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单词管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            height: 100vh;
+            position: fixed;
+        }
+
+        .admin-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #34495e;
+            margin-bottom: 20px;
+        }
+
+        .admin-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
+
+        .admin-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .menu {
+            padding: 0 20px;
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .menu-item:hover {
+            background-color: #34495e;
+        }
+
+        .menu-item.active {
+            background-color: #3498db;
+        }
+
+        .content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* 用户管理表格样式 */
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .user-table th, .user-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .user-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .user-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .action-link {
+            color: #3498db;
+            text-decoration: none;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .action-link:hover {
+            text-decoration: underline;
+        }
+
+        .delete-link {
+            color: #e74c3c;
+        }
+
+        .add-user-btn {
+            background-color: #2ecc71;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        /* 单词管理表格样式 */
+        .word-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .word-table th, .word-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .word-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .word-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .word-type {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .word-example {
+            font-style: italic;
+            color: #2980b9;
+        }
+
+        .example-meaning {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        textarea {
+            min-height: 50px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #27ae60;
+        }
+
+        /* 多选样式 */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input {
+            width: auto;
+            margin-right: 5px;
+        }
+
+        .checkbox-item label {
+            margin-bottom: 0;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+<!-- 左侧边栏 -->
+<div class="sidebar">
+    <div class="admin-info">
+        <div class="admin-avatar">admin</div>
+        <div class="admin-name">管理员123</div>
+    </div>
+
+    <div class="menu">
+        <div class="menu-item active" data-section="user-management">用户管理</div>
+        <div class="menu-item" data-section="word-management">单词管理</div>
+        <div class="menu-item" data-section="add-word">添加单词</div>
+    </div>
+</div>
+
+<!-- 主内容区 -->
+<div class="content">
+    <!-- 用户管理部分 -->
+    <div class="section active" id="user-management">
+        <h2>用户管理</h2>
+        <button class="add-user-btn">添加用户</button>
+        <table class="user-table">
+            <thead>
+            <tr>
+                <th>账号</th>
+                <th>昵称</th>
+                <th>邮箱</th>
+                <th>学习时间</th>
+                <th>学习单词数</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>123456</td>
+                <td>kunkun</td>
+                <td>1740547467@qq.com</td>
+                <td>12小时</td>
+                <td>356</td>
+                <td>
+                    <a class="action-link">编辑</a>
+                    <a class="action-link delete-link">删除</a>
+                </td>
+            </tr>
+            <tr>
+                <td>323124324</td>
+                <td>用户213</td>
+                <td>2313123@qq.com</td>
+                <td>8小时</td>
+                <td>245</td>
+                <td>
+                    <a class="action-link">编辑</a>
+                    <a class="action-link delete-link">删除</a>
+                </td>
+            </tr>
+            <tr>
+                <td>19565752741</td>
+                <td>高翔</td>
+                <td>gaoxiang@163.com</td>
+                <td>20小时</td>
+                <td>512</td>
+                <td>
+                    <a class="action-link">编辑</a>
+                    <a class="action-link delete-link">删除</a>
+                </td>
+            </tr>
+            <tr>
+                <td>19855118036</td>
+                <td>雪峰</td>
+                <td>xuefeng@ahnu.com</td>
+                <td>5小时</td>
+                <td>128</td>
+                <td>
+                    <a class="action-link">编辑</a>
+                    <a class="action-link delete-link">删除</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 单词管理部分 -->
+    <div class="section" id="word-management">
+        <h2>单词管理</h2>
+        <table class="word-table">
+            <thead>
+            <tr>
+                <th>单词</th>
+                <th>词性</th>
+                <th>释义</th>
+                <th>例句</th>
+                <th>例句释义</th>
+                <th>种类</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>apple</td>
+                <td class="word-type">n</td>
+                <td>苹果</td>
+                <td class="word-example">The apple, which was freshly picked from the orchard, had a crisp texture and a sweet aroma.</td>
+                <td class="example-meaning">这个苹果刚从果园里摘下来，口感脆爽，香气甜美。</td>
+                <td>高中, 四级</td>
+                <td>
+                    <a class="action-link">编辑</a>
+                    <a class="action-link delete-link">删除</a>
+                </td>
+            </tr>
+            <tr>
+                <td>banana</td>
+                <td class="word-type">n</td>
+                <td>香蕉</td>
+                <td class="word-example">Despite its slightly bruised appearance, the banana was perfectly ripe and ideal for baking a moist banana bread.</td>
+                <td class="example-meaning">尽管外表有些磕碰，这根香蕉已经熟透，非常适合用来烘焙湿润的香蕉面包。</td>
+                <td>高中, 考研</td>
+                <td>
+                    <a class="action-link">编辑</a>
+                    <a class="action-link delete-link">删除</a>
+                </td>
+            </tr>
+            <tr>
+                <td>cherry</td>
+                <td class="word-type">n</td>
+                <td>樱桃</td>
+                <td class="word-example">As the sun set, the children gathered under the cherry tree, eagerly picking the ripe cherries and laughing with joy.</td>
+                <td class="example-meaning">夕阳西下时，孩子们聚集在樱桃树下，兴奋地采摘熟透的樱桃，欢声笑语不断。</td>
+                <td>四级, 六级</td>
+                <td>
+                    <a class="action-link">编辑</a>
+                    <a class="action-link delete-link">删除</a>
+                </td>
+            </tr>
+            <tr>
+                <td>eloquent</td>
+                <td class="word-type">adj</td>
+                <td>雄辩的，有口才的<br>
+                <td class="word-example">His eloquent speech moved the audience to tears.</td>
+                <td class="example-meaning">他雄辩的演讲让观众感动落泪。</td>
+                <td>考研, 六级</td>
+                <td>
+                    <a class="action-link">编辑</a>
+                    <a class="action-link delete-link">删除</a>
+                </td>
+            </tr>
+            <tr>
+                <td>ephemeral</td>
+                <td class="word-type">adj</td>
+                <td>短暂的；瞬息的</td>
+                <td class="word-example">Fashion is, by definition, ephemeral.</td>
+                <td class="example-meaning">时尚从定义上来说就是短暂的。</td>
+                <td>四级, 考研</td>
+                <td>
+                    <a class="action-link">编辑</a>
+                    <a class="action-link delete-link">删除</a>
+                </td>
+            </tr>
+            <tr>
+                <td>fox</td>
+                <td class="word-type">n</td>
+                <td>狐狸</td>
+                <td class="word-example">The fox, known for its cunning nature, quickly disappeared into the dense forest.</td>
+                <td class="example-meaning">狐狸以其狡猾的天性闻名，迅速消失在茂密的森林中。</td>
+                <td>高中</td>
+                <td>
+                    <a class="action-link">编辑</a>
+                    <a class="action-link delete-link">删除</a>
+                </td>
+            </tr>
+            <tr>
+                <td>perseverance</td>
+                <td class="word-type">n</td>
+                <td>持续的努力；坚持不懈；毅力</td>
+                <td class="word-example">She showed great perseverance in the face of adversity.</td>
+                <td class="example-meaning">她在逆境中表现出极大的毅力。</td>
+                <td>四级, 六级, 考研</td>
+                <td>
+                    <a class="action-link">编辑</a>
+                    <a class="action-link delete-link">删除</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 添加单词部分 -->
+    <div class="section" id="add-word">
+        <h2>添加单词</h2>
+        <form>
+            <div class="form-group">
+                <label for="word">单词</label>
+                <input type="text" id="word" name="word" placeholder="输入单词">
+            </div>
+
+            <div class="form-group">
+                <label for="meaning">释义</label>
+                <textarea id="meaning" name="meaning" placeholder="输入单词的详细释义"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="type">词性</label>
+                <select id="type" name="type">
+                    <option value="">选择词性</option>
+                    <option value="noun">名词</option>
+                    <option value="verb">动词</option>
+                    <option value="adjective">形容词</option>
+                    <option value="adverb">副词</option>
+                    <option value="preposition">介词</option>
+                    <option value="conjunction">连词</option>
+                    <option value="pronoun">代词</option>
+                    <option value="interjection">感叹词</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>种类</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="high-school" name="kind" value="高中单词">
+                        <label for="high-school">高中单词</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cet4" name="kind" value="四级单词">
+                        <label for="cet4">四级单词</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="postgraduate" name="kind" value="考研单词">
+                        <label for="postgraduate">考研单词</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cet6" name="kind" value="六级单词">
+                        <label for="cet6">六级单词</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="example">例句</label>
+                <textarea id="example" name="example" placeholder="输入例句"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="example">例句释义</label>
+                <textarea id="example_meaning" name="example" placeholder="输入例句释义"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">添加单词</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 切换菜单项和内容区
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+            // 移除所有菜单项的active类
+            document.querySelectorAll('.menu-item').forEach(i => {
+                i.classList.remove('active');
+            });
+
+            // 给当前点击的菜单项添加active类
+            this.classList.add('active');
+
+            // 隐藏所有内容区
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // 显示对应的内容区
+            const sectionId = this.getAttribute('data-section');
+            document.getElementById(sectionId).classList.add('active');
+        });
+    });
+
+    // 添加用户按钮点击事件
+    document.querySelector('.add-user-btn').addEventListener('click', function() {
+        alert('添加用户功能即将实现');
+    });
+
+    // 操作链接点击事件
+    document.querySelectorAll('.action-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const action = this.textContent;
+            const row = this.closest('tr');
+            const name = row.querySelector('td:nth-child(2)').textContent;
+
+            if(action === '删除') {
+                if(confirm(`确定要删除 ${name} 吗？`)) {
+                    row.remove();
+                }
+            } else {
+                alert(`${action} ${name} 功能即将实现`);
+            }
+        });
+    });
+
+    // 表单提交事件
+    document.querySelector('form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const selectedKinds = Array.from(document.querySelectorAll('input[name="kind"]:checked'))
+            .map(checkbox => checkbox.value)
+            .join(', ');
+        alert(`单词已提交！选择的种类: ${selectedKinds}`);
+        // 这里可以添加实际的表单提交逻辑
+    });
+</script>
+</body>
+</html>

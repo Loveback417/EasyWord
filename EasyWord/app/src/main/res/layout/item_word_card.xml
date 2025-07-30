@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:text="lu"
+        android:textSize="45sp"
+        android:layout_marginTop="50dp"
+        android:padding="10dp"
+        android:id="@+id/tv_learn_menu_word"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font_learn_menu"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/black" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="kun"
+            android:textSize="30sp"
+            android:padding="10dp"
+            android:gravity="end"
+            android:id="@+id/tv_learn_menu_meaning"
+            android:fontFamily="@font/font_learn_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+    <LinearLayout
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:background="@drawable/round_border_black">
+
+        <TextView
+            android:fontFamily="@font/font_learn_menu"
+            android:id="@+id/tv_learn_menu_sentence"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="你好"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_learn_menu_sentence_meaning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="你好aaaa"
+            android:fontFamily="@font/font_learn_menu"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:gravity="center"
+        android:id="@+id/tv_learn_menu_count"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="你好aaaa"
+        android:fontFamily="@font/font_learn_menu"
+        android:textSize="15sp" />
+
+
+    <Button
+        android:layout_gravity="end"
+        android:id="@+id/btn_sure"
+        android:text="已学会"
+        android:textSize="15sp"
+        android:fontFamily="@font/font_learn_menu"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
